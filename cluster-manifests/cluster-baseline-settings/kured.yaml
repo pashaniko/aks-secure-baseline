@@ -4,24 +4,24 @@ kind: ClusterRole
 metadata:
   name: kured
 rules:
-# Allow kured to read spec.unschedulable
-# Allow kubectl to drain/uncordon
-#
-# NB: These permissions are tightly coupled to the bundled version of kubectl; the ones below
-# match https://github.com/kubernetes/kubernetes/blob/v1.19.4/staging/src/k8s.io/kubectl/pkg/cmd/drain/drain.go
-#
-- apiGroups: [""]
-  resources: ["nodes"]
-  verbs:     ["get", "patch"]
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs:     ["list", "delete", "get"]
-- apiGroups: ["apps"]
-  resources: ["daemonsets"]
-  verbs:     ["get"]
-- apiGroups: [""]
-  resources: ["pods/eviction"]
-  verbs:     ["create"]
+  # Allow kured to read spec.unschedulable
+  # Allow kubectl to drain/uncordon
+  #
+  # NB: These permissions are tightly coupled to the bundled version of kubectl; the ones below
+  # match https://github.com/kubernetes/kubernetes/blob/v1.19.4/staging/src/k8s.io/kubectl/pkg/cmd/drain/drain.go
+  #
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "patch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list", "delete", "get"]
+  - apiGroups: ["apps"]
+    resources: ["daemonsets"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["pods/eviction"]
+    verbs: ["create"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -32,9 +32,9 @@ roleRef:
   kind: ClusterRole
   name: kured
 subjects:
-- kind: ServiceAccount
-  name: kured
-  namespace: cluster-baseline-settings
+  - kind: ServiceAccount
+    name: kured
+    namespace: cluster-baseline-settings
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -42,11 +42,11 @@ metadata:
   namespace: cluster-baseline-settings
   name: kured
 rules:
-# Allow kured to lock/unlock itself
-- apiGroups:     ["apps"]
-  resources:     ["daemonsets"]
-  resourceNames: ["kured"]
-  verbs:         ["update"]
+  # Allow kured to lock/unlock itself
+  - apiGroups: ["apps"]
+    resources: ["daemonsets"]
+    resourceNames: ["kured"]
+    verbs: ["update"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -54,9 +54,9 @@ metadata:
   namespace: cluster-baseline-settings
   name: kured
 subjects:
-- kind: ServiceAccount
-  namespace: cluster-baseline-settings
-  name: kured
+  - kind: ServiceAccount
+    namespace: cluster-baseline-settings
+    name: kured
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -71,8 +71,8 @@ metadata:
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: kured                           # Must match `--ds-name`
-  namespace: cluster-baseline-settings  # Must match `--ds-namespace`
+  name: kured # Must match `--ds-name`
+  namespace: cluster-baseline-settings # Must match `--ds-namespace`
 spec:
   selector:
     matchLabels:
@@ -109,7 +109,7 @@ spec:
           # az acr import --source docker.io/weaveworks/kured:1.6.1 -n <your-acr-instance-name>
           # and then set this to
           # image: <your-acr-instance-name>.azurecr.io/weaveworks/kured:1.6.1
-          image: docker.io/weaveworks/kured:1.6.1
+          image: dacraksrkc2tkm2n4f7u.azurecr.io/weaveworks/kured:1.6.1
           imagePullPolicy: IfNotPresent
           resources:
             limits:
